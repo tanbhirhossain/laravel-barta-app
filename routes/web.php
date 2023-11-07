@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/register', [RegisterController::class, 'index'])->name('front.register');
-Route::post('/register-store', [RegisterController::class, 'store'])->name('front.register.store');
+//Authorization
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('front.register.store');
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class,'login'])->name('front.login.attempt');
+Route::get('/logout', [LoginController::class,'logout'])->name('logout');
+Route::post('/logout', [LoginController::class,'logout']);
 
-Route::get('/login', [LoginController::class, 'index'])->name('front.login');
+//Home
+Route::get('/', [HomeController::class,'index'])->name('front.home');
