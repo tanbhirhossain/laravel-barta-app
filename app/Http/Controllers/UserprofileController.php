@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Userprofile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserprofileController extends Controller
 {
@@ -12,7 +15,10 @@ class UserprofileController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user()->id;
+        $profile = User::find($user);
+
+        return view('frontend.profile.profile', compact('profile'));
     }
 
     /**
@@ -44,7 +50,13 @@ class UserprofileController extends Controller
      */
     public function edit(Userprofile $userprofile)
     {
-        //
+        $user = Auth::user()->id;
+
+        $profile = User::with('userProfile')->find($user);
+        // dd($userprofile);
+        $name = explode(' ', $profile->name);
+     
+        return view('frontend.profile.update-profile', compact('profile', 'name'));
     }
 
     /**
@@ -52,7 +64,21 @@ class UserprofileController extends Controller
      */
     public function update(Request $request, Userprofile $userprofile)
     {
-        //
+       $user = Auth::user()->id;
+
+       $userprofile = User::find($user);
+       $userprofile->name = $request->first_name.' '.$request->last_name;
+       $userprofile->email = $request->email;
+       $userprofile->password = Hash::make($request->password);
+       $userprofile->save();
+
+       $bio = Userprofile::Where('user_id', Auth::user()->id)->first();
+       $bio->bio = $request->bio;
+       $bio->save();
+
+       return redirect()->back()->with('success','Profile Updated Successfully');
+        
+       
     }
 
     /**

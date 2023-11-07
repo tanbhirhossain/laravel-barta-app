@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserprofileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +28,6 @@ Route::post('/logout', [LoginController::class,'logout']);
 
 //Home
 Route::get('/', [HomeController::class,'index'])->name('front.home');
+Route::get('/profile', [UserprofileController::class,'index'])->name('front.home');
+Route::get('/profile/edit', [UserprofileController::class,'edit'])->name('front.profile.edit');
+Route::put('/profile/edit', [UserprofileController::class, 'update'])->name('front.profile.update');

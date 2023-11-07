@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Userprofile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -32,9 +33,10 @@ class RegisterController extends Controller
         $validatedData['password'] = Hash::make($request->password);
         $validateData['name'] = $validateData['first_name'].' '.$validateData['last_name'];
 
-        //dd($validateData);
         User::create($validateData);
-
+        Userprofile::create([
+            'user_id' => $validatedData['id'],
+        ]);
         return redirect()->back()->with('success','User Registration Successful');
         
     }
