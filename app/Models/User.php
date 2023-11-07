@@ -43,7 +43,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function userProfile(){
-        return $this->belongsTo(UserProfile::class,'user_id','id');
+    // public function userProfile(){
+    //     return $this->belongsTo(UserProfile::class,'user_id','id');
+    // }
+    public function userProfile() {
+        return $this->hasOne(UserProfile::class);
     }
+    
 }

@@ -16,7 +16,9 @@ class UserprofileController extends Controller
     public function index()
     {
         $user = Auth::user()->id;
-        $profile = User::find($user);
+        // $profile = User::find($user);
+        $profile = User::with('userProfile')->find($user);
+
 
         return view('frontend.profile.profile', compact('profile'));
     }
@@ -64,22 +66,34 @@ class UserprofileController extends Controller
      */
     public function update(Request $request, Userprofile $userprofile)
     {
-       $user = Auth::user()->id;
-
-       $userprofile = User::find($user);
-       $userprofile->name = $request->first_name.' '.$request->last_name;
-       $userprofile->email = $request->email;
-       $userprofile->password = Hash::make($request->password);
-       $userprofile->save();
-
-       $bio = Userprofile::Where('user_id', Auth::user()->id)->first();
-       $bio->bio = $request->bio;
-       $bio->save();
-
-       return redirect()->back()->with('success','Profile Updated Successfully');
-        
-       
+        $validatedData = $request->validate([
+            'first-name' => 'required|string|max:255',
+            'last-name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'nullable|min:6',
+            'bio' => 'nullable|string',
+        ]);
+    
+        $user = auth()->user();
+    
+        $user->name = $validatedData['first-name'] . ' ' . $validatedData['last-name'];
+        $user->email = $validatedData['email'];
+    
+        if ($validatedData['password']) {
+            $user->password = Hash::make($validatedData['password']);
+        }
+    
+        $user->save();
+    
+        if ($user->userProfile) {
+            $user->userProfile->update(['bio' => $validatedData['bio']]);
+        } else {
+            $user->userProfile()->create(['bio' => $validatedData['bio']]);
+        }
+    
+        return redirect()->route('front.profile.edit')->with('success', 'Profile updated successfully');
     }
+    
 
     /**
      * Remove the specified resource from storage.

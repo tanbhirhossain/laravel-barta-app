@@ -34,9 +34,7 @@ class RegisterController extends Controller
         $validateData['name'] = $validateData['first_name'].' '.$validateData['last_name'];
 
         User::create($validateData);
-        Userprofile::create([
-            'user_id' => $validatedData['id'],
-        ]);
+       
         return redirect()->back()->with('success','User Registration Successful');
         
     }

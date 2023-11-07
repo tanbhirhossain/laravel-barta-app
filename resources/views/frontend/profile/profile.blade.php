@@ -22,7 +22,7 @@ class="bg-white border-2 p-8 border-gray-800 rounded-xl min-h-[400px] space-y-8 
   <!-- User Meta -->
   <div>
     <h1 class="font-bold md:text-2xl">{{ $profile->name }}</h1>
-    <p class="text-gray-700">Less Talk, More Code 💻</p>
+    <p class="text-gray-700">{{ $profile->userProfile->bio }}</p>
   </div>
   <!-- / User Meta -->
 </div>
